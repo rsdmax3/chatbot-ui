@@ -104,10 +104,7 @@ export default function SetupPage() {
       ...profile,
       has_onboarded: true,
       display_name: displayName,
-      username,
-      aws_access_key_id: awsAccessKey,
-      aws_secret_access_key: awsSecretKey,
-      aws_session_token: awsSessionToken
+      username
     }
 
     const updatedProfile = await updateProfile(profile.id, updateProfilePayload)

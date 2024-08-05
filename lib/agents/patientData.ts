@@ -15,13 +15,15 @@ export async function buildPatientStore() {
       console.log(`Fetched ${patientList.length} patient records`)
 
       for (const patient of patientList) {
+        const sanitizedFirstName = patient.firstName.replace(/\d/g, "")
+        const sanitizedLastName = patient.lastName.replace(/\d/g, "")
         PATIENT_FILES[patient.id] = {
           patientID: patient.id,
-          firstName: patient.firstName,
-          lastName: patient.lastName,
-          fullName: `${patient.firstName} ${patient.lastName}`,
+          firstName: sanitizedFirstName,
+          lastName: sanitizedLastName,
+          fullName: `${sanitizedFirstName} ${sanitizedLastName}`,
           searchText:
-            `${patient.firstName} ${patient.lastName} ${patient.id}`.toLowerCase()
+            `${sanitizedFirstName} ${sanitizedLastName} ${patient.id}`.toLowerCase()
         }
       }
 

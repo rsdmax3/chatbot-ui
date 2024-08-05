@@ -22,17 +22,37 @@ export const APIStep: FC<APIStepProps> = ({
 }) => {
   return (
     <>
-      <div className="mt-5 space-y-2">
-        <Label className="flex items-center">
-          <div>AWS Access Key</div>
-
-          <Button
-            className="ml-3 h-[18px] w-[150px] text-[11px]"
-            onClick={() => onAwsAccessKeyChange(awsAccessKey)}
-          >
-            {awsAccessKey}
-          </Button>
-        </Label>
+      <div className="mt-5 space-y-4">
+        <div>
+          <Label htmlFor="awsAccessKey">AWS Access Key</Label>
+          <Input
+            id="awsAccessKey"
+            type="text"
+            value={awsAccessKey}
+            onChange={e => onAwsAccessKeyChange(e.target.value)}
+            placeholder="Enter AWS Access Key"
+          />
+        </div>
+        <div>
+          <Label htmlFor="awsSecretKey">AWS Secret Key</Label>
+          <Input
+            id="awsSecretKey"
+            type="password"
+            value={awsSecretKey}
+            onChange={e => onAwsSecretKeyChange(e.target.value)}
+            placeholder="Enter AWS Secret Key"
+          />
+        </div>
+        <div>
+          <Label htmlFor="awsSessionToken">AWS Session Token (optional)</Label>
+          <Input
+            id="awsSessionToken"
+            type="text"
+            value={awsSessionToken}
+            onChange={e => onAwsSessionTokenChange(e.target.value)}
+            placeholder="Enter AWS Session Token (if applicable)"
+          />
+        </div>
       </div>
     </>
   )

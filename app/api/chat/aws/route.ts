@@ -13,11 +13,6 @@ import {
 
 export const runtime = "edge"
 
-const agentConfig: AgentConfig = {
-  modelGrade: "medium-v2",
-  profile: "default"
-}
-
 export async function POST(request: NextRequest) {
   console.log("Received POST request")
   const json = await request.json()
@@ -28,13 +23,6 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const profile = await getServerProfile()
-
-    // Set AWS credentials in the environment
-    process.env.AWS_ACCESS_KEY_ID = profile.aws_access_key_id || ""
-    process.env.AWS_SECRET_ACCESS_KEY = profile.aws_secret_access_key || ""
-    process.env.AWS_SESSION_TOKEN = profile.aws_session_token || ""
-
     if (!process.env.AWS_ACCESS_KEY_ID)
       throw new Error("AWS Access Key ID not found")
     if (!process.env.AWS_SECRET_ACCESS_KEY)
