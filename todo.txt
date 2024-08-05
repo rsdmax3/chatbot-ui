@@ -1,0 +1,3 @@
+1. Strip down all the extra stuff i dont need from other providers to simplify my code base
+2. get ride of supabase -> learn how to build it on top of dynamo db
+3. begin adding tools and other functionality  

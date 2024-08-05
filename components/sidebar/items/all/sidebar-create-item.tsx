@@ -23,7 +23,6 @@ import {
   uploadAssistantImage
 } from "@/db/storage/assistant-images"
 import { createTool } from "@/db/tools"
-import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import { Tables, TablesInsert } from "@/supabase/types"
 import { ContentType } from "@/types"
 import { FC, useContext, useRef, useState } from "react"
@@ -78,8 +77,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
       const createdFile = await createFileBasedOnExtension(
         file,
         rest,
-        workspaceId,
-        selectedWorkspace.embeddings_provider as "openai" | "local"
+        workspaceId
       )
 
       return createdFile
@@ -129,16 +127,12 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
         const url = (await getAssistantImageFromStorage(filePath)) || ""
 
         if (url) {
-          const response = await fetch(url)
-          const blob = await response.blob()
-          const base64 = await convertBlobToBase64(blob)
-
           setAssistantImages(prev => [
             ...prev,
             {
               assistantId: updatedAssistant.id,
               path: filePath,
-              base64,
+              base64: "",
               url
             }
           ])

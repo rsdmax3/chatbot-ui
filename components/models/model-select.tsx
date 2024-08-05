@@ -22,13 +22,8 @@ export const ModelSelect: FC<ModelSelectProps> = ({
   selectedModelId,
   onSelectModel
 }) => {
-  const {
-    profile,
-    models,
-    availableHostedModels,
-    availableLocalModels,
-    availableOpenRouterModels
-  } = useContext(ChatbotUIContext)
+  const { profile, models, availableHostedModels, availableLocalModels } =
+    useContext(ChatbotUIContext)
 
   const inputRef = useRef<HTMLInputElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -60,8 +55,7 @@ export const ModelSelect: FC<ModelSelectProps> = ({
       imageInput: false
     })),
     ...availableHostedModels,
-    ...availableLocalModels,
-    ...availableOpenRouterModels
+    ...availableLocalModels
   ]
 
   const groupedModels = allModels.reduce<Record<string, LLM[]>>(
@@ -154,9 +148,9 @@ export const ModelSelect: FC<ModelSelectProps> = ({
           {Object.entries(groupedModels).map(([provider, models]) => {
             const filteredModels = models
               .filter(model => {
-                if (tab === "hosted") return model.provider !== "ollama"
-                if (tab === "local") return model.provider === "ollama"
-                if (tab === "openrouter") return model.provider === "openrouter"
+                if (tab === "hosted") return model.provider === "aws"
+                if (tab === "local") return false
+                if (tab === "openrouter") return false
               })
               .filter(model =>
                 model.modelName.toLowerCase().includes(search.toLowerCase())
@@ -170,7 +164,9 @@ export const ModelSelect: FC<ModelSelectProps> = ({
                 <div className="mb-1 ml-2 text-xs font-bold tracking-wide opacity-50">
                   {provider === "openai" && profile.use_azure_openai
                     ? "AZURE OPENAI"
-                    : provider.toLocaleUpperCase()}
+                    : provider === "aws"
+                      ? "AWS"
+                      : provider.toLocaleUpperCase()}
                 </div>
 
                 <div className="mb-4">

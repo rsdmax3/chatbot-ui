@@ -6,12 +6,7 @@ import { ChatbotUIContext } from "@/context/context"
 import { getProfileByUserId } from "@/db/profile"
 import { getWorkspaceImageFromStorage } from "@/db/storage/workspace-images"
 import { getWorkspacesByUserId } from "@/db/workspaces"
-import { convertBlobToBase64 } from "@/lib/blob-to-b64"
-import {
-  fetchHostedModels,
-  fetchOllamaModels,
-  fetchOpenRouterModels
-} from "@/lib/models/fetch-models"
+import { fetchHostedModels } from "@/lib/models/fetch-models"
 import { supabase } from "@/lib/supabase/browser-client"
 import { Tables } from "@/supabase/types"
 import {
@@ -20,7 +15,6 @@ import {
   ChatSettings,
   LLM,
   MessageImage,
-  OpenRouterLLM,
   WorkspaceImage
 } from "@/types"
 import { AssistantImage } from "@/types/images/assistant-image"
@@ -54,9 +48,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [envKeyMap, setEnvKeyMap] = useState<Record<string, VALID_ENV_KEYS>>({})
   const [availableHostedModels, setAvailableHostedModels] = useState<LLM[]>([])
   const [availableLocalModels, setAvailableLocalModels] = useState<LLM[]>([])
-  const [availableOpenRouterModels, setAvailableOpenRouterModels] = useState<
-    OpenRouterLLM[]
-  >([])
 
   // WORKSPACE STORE
   const [selectedWorkspace, setSelectedWorkspace] =
@@ -77,13 +68,12 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [userInput, setUserInput] = useState<string>("")
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatSettings, setChatSettings] = useState<ChatSettings>({
-    model: "gpt-4-turbo-preview",
+    model: "anthropic.claude-3-5-sonnet-20240620-v1:0",
     prompt: "You are a helpful AI assistant.",
     temperature: 0.5,
     contextLength: 4000,
     includeProfileContext: true,
-    includeWorkspaceInstructions: true,
-    embeddingsProvider: "openai"
+    includeWorkspaceInstructions: true
   })
   const [selectedChat, setSelectedChat] = useState<Tables<"chats"> | null>(null)
   const [chatFileItems, setChatFileItems] = useState<Tables<"file_items">[]>([])
@@ -95,13 +85,13 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     useState<AbortController | null>(null)
 
   // CHAT INPUT COMMAND STORE
-  const [isPromptPickerOpen, setIsPromptPickerOpen] = useState(false)
+  const [isCommandPickerOpen, setIsCommandPickerOpen] = useState(false)
   const [slashCommand, setSlashCommand] = useState("")
   const [isFilePickerOpen, setIsFilePickerOpen] = useState(false)
   const [hashtagCommand, setHashtagCommand] = useState("")
   const [isToolPickerOpen, setIsToolPickerOpen] = useState(false)
   const [toolCommand, setToolCommand] = useState("")
-  const [focusPrompt, setFocusPrompt] = useState(false)
+  const [focusCommand, setFocusCommand] = useState(false)
   const [focusFile, setFocusFile] = useState(false)
   const [focusTool, setFocusTool] = useState(false)
   const [focusAssistant, setFocusAssistant] = useState(false)
@@ -133,21 +123,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
 
         setEnvKeyMap(hostedModelRes.envKeyMap)
         setAvailableHostedModels(hostedModelRes.hostedModels)
-
-        if (
-          profile["openrouter_api_key"] ||
-          hostedModelRes.envKeyMap["openrouter"]
-        ) {
-          const openRouterModels = await fetchOpenRouterModels()
-          if (!openRouterModels) return
-          setAvailableOpenRouterModels(openRouterModels)
-        }
-      }
-
-      if (process.env.NEXT_PUBLIC_OLLAMA_URL) {
-        const localModels = await fetchOllamaModels()
-        if (!localModels) return
-        setAvailableLocalModels(localModels)
       }
     })()
   }, [])
@@ -179,14 +154,13 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         if (workspaceImageUrl) {
           const response = await fetch(workspaceImageUrl)
           const blob = await response.blob()
-          const base64 = await convertBlobToBase64(blob)
 
           setWorkspaceImages(prev => [
             ...prev,
             {
               workspaceId: workspace.id,
               path: workspace.image_path,
-              base64: base64,
+              base64: "",
               url: workspaceImageUrl
             }
           ])
@@ -233,8 +207,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         setAvailableHostedModels,
         availableLocalModels,
         setAvailableLocalModels,
-        availableOpenRouterModels,
-        setAvailableOpenRouterModels,
 
         // WORKSPACE STORE
         selectedWorkspace,
@@ -275,8 +247,8 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         setAbortController,
 
         // CHAT INPUT COMMAND STORE
-        isPromptPickerOpen,
-        setIsPromptPickerOpen,
+        isCommandPickerOpen,
+        setIsCommandPickerOpen,
         slashCommand,
         setSlashCommand,
         isFilePickerOpen,
@@ -287,8 +259,8 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         setIsToolPickerOpen,
         toolCommand,
         setToolCommand,
-        focusPrompt,
-        setFocusPrompt,
+        focusCommand,
+        setFocusCommand,
         focusFile,
         setFocusFile,
         focusTool,

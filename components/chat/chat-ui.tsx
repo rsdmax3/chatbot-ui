@@ -7,7 +7,6 @@ import { getChatById } from "@/db/chats"
 import { getMessageFileItemsByMessageId } from "@/db/message-file-items"
 import { getMessagesByChatId } from "@/db/messages"
 import { getMessageImageFromStorage } from "@/db/storage/message-images"
-import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import useHotkey from "@/lib/hooks/use-hotkey"
 import { LLMID, MessageImage } from "@/types"
 import { useParams } from "next/navigation"
@@ -84,20 +83,6 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
         message.image_paths
           ? message.image_paths.map(async imagePath => {
               const url = await getMessageImageFromStorage(imagePath)
-
-              if (url) {
-                const response = await fetch(url)
-                const blob = await response.blob()
-                const base64 = await convertBlobToBase64(blob)
-
-                return {
-                  messageId: message.id,
-                  path: imagePath,
-                  base64,
-                  url,
-                  file: null
-                }
-              }
 
               return {
                 messageId: message.id,
@@ -176,8 +161,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
       temperature: chat.temperature,
       contextLength: chat.context_length,
       includeProfileContext: chat.include_profile_context,
-      includeWorkspaceInstructions: chat.include_workspace_instructions,
-      embeddingsProvider: chat.embeddings_provider as "openai" | "local"
+      includeWorkspaceInstructions: chat.include_workspace_instructions
     })
   }
 

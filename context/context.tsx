@@ -5,7 +5,6 @@ import {
   ChatSettings,
   LLM,
   MessageImage,
-  OpenRouterLLM,
   WorkspaceImage
 } from "@/types"
 import { AssistantImage } from "@/types/images/assistant-image"
@@ -46,8 +45,6 @@ interface ChatbotUIContext {
   setAvailableHostedModels: Dispatch<SetStateAction<LLM[]>>
   availableLocalModels: LLM[]
   setAvailableLocalModels: Dispatch<SetStateAction<LLM[]>>
-  availableOpenRouterModels: OpenRouterLLM[]
-  setAvailableOpenRouterModels: Dispatch<SetStateAction<OpenRouterLLM[]>>
 
   // WORKSPACE STORE
   selectedWorkspace: Tables<"workspaces"> | null
@@ -88,8 +85,8 @@ interface ChatbotUIContext {
   setIsGenerating: Dispatch<SetStateAction<boolean>>
 
   // CHAT INPUT COMMAND STORE
-  isPromptPickerOpen: boolean
-  setIsPromptPickerOpen: Dispatch<SetStateAction<boolean>>
+  isCommandPickerOpen: boolean
+  setIsCommandPickerOpen: Dispatch<SetStateAction<boolean>>
   slashCommand: string
   setSlashCommand: Dispatch<SetStateAction<string>>
   isFilePickerOpen: boolean
@@ -100,8 +97,8 @@ interface ChatbotUIContext {
   setIsToolPickerOpen: Dispatch<SetStateAction<boolean>>
   toolCommand: string
   setToolCommand: Dispatch<SetStateAction<string>>
-  focusPrompt: boolean
-  setFocusPrompt: Dispatch<SetStateAction<boolean>>
+  focusCommand: boolean
+  setFocusCommand: Dispatch<SetStateAction<boolean>>
   focusFile: boolean
   setFocusFile: Dispatch<SetStateAction<boolean>>
   focusTool: boolean
@@ -172,8 +169,6 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   setAvailableHostedModels: () => {},
   availableLocalModels: [],
   setAvailableLocalModels: () => {},
-  availableOpenRouterModels: [],
-  setAvailableOpenRouterModels: () => {},
 
   // WORKSPACE STORE
   selectedWorkspace: null,
@@ -214,8 +209,8 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   setAbortController: () => {},
 
   // CHAT INPUT COMMAND STORE
-  isPromptPickerOpen: false,
-  setIsPromptPickerOpen: () => {},
+  isCommandPickerOpen: false,
+  setIsCommandPickerOpen: () => {},
   slashCommand: "",
   setSlashCommand: () => {},
   isFilePickerOpen: false,
@@ -226,8 +221,8 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   setIsToolPickerOpen: () => {},
   toolCommand: "",
   setToolCommand: () => {},
-  focusPrompt: false,
-  setFocusPrompt: () => {},
+  focusCommand: false,
+  setFocusCommand: () => {},
   focusFile: false,
   setFocusFile: () => {},
   focusTool: false,

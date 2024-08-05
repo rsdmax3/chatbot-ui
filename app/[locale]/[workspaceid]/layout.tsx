@@ -159,7 +159,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     setChatSettings({
       model: (searchParams.get("model") ||
         workspace?.default_model ||
-        "gpt-4-1106-preview") as LLMID,
+        "anthropic.claude-3-5-sonnet-20240620-v1:0") as LLMID,
       prompt:
         workspace?.default_prompt ||
         "You are a friendly, helpful AI assistant.",
@@ -167,9 +167,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
       contextLength: workspace?.default_context_length || 4096,
       includeProfileContext: workspace?.include_profile_context || true,
       includeWorkspaceInstructions:
-        workspace?.include_workspace_instructions || true,
-      embeddingsProvider:
-        (workspace?.embeddings_provider as "openai" | "local") || "openai"
+        workspace?.include_workspace_instructions || true
     })
 
     setLoading(false)

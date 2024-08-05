@@ -14,7 +14,7 @@ export const usePromptAndCommand = () => {
     userInput,
     setUserInput,
     setShowFilesDisplay,
-    setIsPromptPickerOpen,
+    setIsCommandPickerOpen,
     setIsFilePickerOpen,
     setSlashCommand,
     setHashtagCommand,
@@ -43,7 +43,7 @@ export const usePromptAndCommand = () => {
       setIsAssistantPickerOpen(true)
       setAtCommand(atMatch[1])
     } else if (slashMatch) {
-      setIsPromptPickerOpen(true)
+      setIsCommandPickerOpen(true)
       setSlashCommand(slashMatch[1])
     } else if (hashtagMatch) {
       setIsFilePickerOpen(true)
@@ -52,7 +52,7 @@ export const usePromptAndCommand = () => {
       setIsToolPickerOpen(true)
       setToolCommand(toolMatch[1])
     } else {
-      setIsPromptPickerOpen(false)
+      setIsCommandPickerOpen(false)
       setIsFilePickerOpen(false)
       setIsToolPickerOpen(false)
       setIsAssistantPickerOpen(false)
@@ -66,7 +66,7 @@ export const usePromptAndCommand = () => {
   }
 
   const handleSelectPrompt = (prompt: Tables<"prompts">) => {
-    setIsPromptPickerOpen(false)
+    setIsCommandPickerOpen(false)
     setUserInput(userInput.replace(/\/[^ ]*$/, "") + prompt.content)
   }
 
@@ -145,8 +145,7 @@ export const usePromptAndCommand = () => {
       temperature: assistant.temperature,
       contextLength: assistant.context_length,
       includeProfileContext: assistant.include_profile_context,
-      includeWorkspaceInstructions: assistant.include_workspace_instructions,
-      embeddingsProvider: assistant.embeddings_provider as "openai" | "local"
+      includeWorkspaceInstructions: assistant.include_workspace_instructions
     })
 
     let allFiles = []

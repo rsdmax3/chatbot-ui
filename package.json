@@ -1,5 +1,5 @@
 {
-  "name": "chatbot-ui",
+  "name": "medea-ui",
   "version": "2.0.0",
   "private": true,
   "scripts": {
@@ -28,6 +28,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.18.0",
     "@apidevtools/json-schema-ref-parser": "^11.1.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.622.0",
     "@azure/openai": "^1.0.0-beta.8",
     "@google/generative-ai": "^0.11.4",
     "@hookform/resolvers": "^3.3.2",

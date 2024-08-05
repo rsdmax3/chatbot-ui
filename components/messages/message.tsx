@@ -52,7 +52,6 @@ export const Message: FC<MessageProps> = ({
     setIsGenerating,
     firstTokenReceived,
     availableLocalModels,
-    availableOpenRouterModels,
     chatMessages,
     selectedAssistant,
     chatImages,
@@ -136,8 +135,7 @@ export const Message: FC<MessageProps> = ({
       imageInput: false
     })),
     ...LLM_LIST,
-    ...availableLocalModels,
-    ...availableOpenRouterModels
+    ...availableLocalModels
   ].find(llm => llm.modelId === message.model) as LLM
 
   const messageAssistantImage = assistantImages.find(
@@ -231,7 +229,7 @@ export const Message: FC<MessageProps> = ({
                     display={<div>{MODEL_DATA?.modelName}</div>}
                     trigger={
                       <ModelIcon
-                        provider={modelDetails?.provider || "custom"}
+                        provider={modelDetails?.provider || "aws"}
                         height={ICON_SIZE}
                         width={ICON_SIZE}
                       />

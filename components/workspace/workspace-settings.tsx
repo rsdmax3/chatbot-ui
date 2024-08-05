@@ -5,7 +5,6 @@ import {
   uploadWorkspaceImage
 } from "@/db/storage/workspace-images"
 import { updateWorkspace } from "@/db/workspaces"
-import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import { LLMID } from "@/types"
 import { IconHome, IconSettings } from "@tabler/icons-react"
 import { FC, useContext, useEffect, useRef, useState } from "react"
@@ -62,8 +61,7 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
     contextLength: selectedWorkspace?.default_context_length,
     includeProfileContext: selectedWorkspace?.include_profile_context,
     includeWorkspaceInstructions:
-      selectedWorkspace?.include_workspace_instructions,
-    embeddingsProvider: selectedWorkspace?.embeddings_provider
+      selectedWorkspace?.include_workspace_instructions
   })
 
   useEffect(() => {
@@ -85,21 +83,15 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
 
       const url = (await getWorkspaceImageFromStorage(imagePath)) || ""
 
-      if (url) {
-        const response = await fetch(url)
-        const blob = await response.blob()
-        const base64 = await convertBlobToBase64(blob)
-
-        setWorkspaceImages(prev => [
-          ...prev,
-          {
-            workspaceId: selectedWorkspace.id,
-            path: imagePath,
-            base64,
-            url
-          }
-        ])
-      }
+      setWorkspaceImages(prev => [
+        ...prev,
+        {
+          workspaceId: selectedWorkspace.id,
+          path: imagePath,
+          base64: "",
+          url
+        }
+      ])
     }
 
     const updatedWorkspace = await updateWorkspace(selectedWorkspace.id, {
@@ -112,7 +104,6 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
       default_prompt: defaultChatSettings.prompt,
       default_temperature: defaultChatSettings.temperature,
       default_context_length: defaultChatSettings.contextLength,
-      embeddings_provider: defaultChatSettings.embeddingsProvider,
       include_profile_context: defaultChatSettings.includeProfileContext,
       include_workspace_instructions:
         defaultChatSettings.includeWorkspaceInstructions
@@ -124,8 +115,7 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
       defaultChatSettings.temperature &&
       defaultChatSettings.contextLength &&
       defaultChatSettings.includeProfileContext &&
-      defaultChatSettings.includeWorkspaceInstructions &&
-      defaultChatSettings.embeddingsProvider
+      defaultChatSettings.includeWorkspaceInstructions
     ) {
       setChatSettings({
         model: defaultChatSettings.model as LLMID,
@@ -134,10 +124,7 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
         contextLength: defaultChatSettings.contextLength,
         includeProfileContext: defaultChatSettings.includeProfileContext,
         includeWorkspaceInstructions:
-          defaultChatSettings.includeWorkspaceInstructions,
-        embeddingsProvider: defaultChatSettings.embeddingsProvider as
-          | "openai"
-          | "local"
+          defaultChatSettings.includeWorkspaceInstructions
       })
     }
 

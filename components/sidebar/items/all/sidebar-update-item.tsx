@@ -77,7 +77,6 @@ import {
   getToolWorkspacesByToolId,
   updateTool
 } from "@/db/tools"
-import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import { Tables, TablesUpdate } from "@/supabase/types"
 import { CollectionFile, ContentType, DataItemType } from "@/types"
 import { FC, useContext, useEffect, useRef, useState } from "react"
@@ -516,14 +515,13 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
         if (url) {
           const response = await fetch(url)
           const blob = await response.blob()
-          const base64 = await convertBlobToBase64(blob)
 
           setAssistantImages(prev => [
             ...prev,
             {
               assistantId: updatedAssistant.id,
               path: filePath,
-              base64,
+              base64: "",
               url
             }
           ])

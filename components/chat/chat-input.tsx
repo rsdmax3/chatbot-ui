@@ -15,7 +15,6 @@ import { toast } from "sonner"
 import { Input } from "../ui/input"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { ChatCommandInput } from "./chat-command-input"
-import { ChatFilesDisplay } from "./chat-files-display"
 import { useChatHandler } from "./chat-hooks/use-chat-handler"
 import { useChatHistoryHandler } from "./chat-hooks/use-chat-history"
 import { usePromptAndCommand } from "./chat-hooks/use-prompt-and-command"
@@ -41,14 +40,14 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     isGenerating,
     selectedPreset,
     selectedAssistant,
-    focusPrompt,
-    setFocusPrompt,
+    focusCommand,
+    setFocusCommand,
     focusFile,
     focusTool,
     setFocusTool,
     isToolPickerOpen,
-    isPromptPickerOpen,
-    setIsPromptPickerOpen,
+    isCommandPickerOpen,
+    setIsCommandPickerOpen,
     isFilePickerOpen,
     setFocusFile,
     chatSettings,
@@ -84,13 +83,13 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (!isTyping && event.key === "Enter" && !event.shiftKey) {
       event.preventDefault()
-      setIsPromptPickerOpen(false)
+      setIsCommandPickerOpen(false)
       handleSendMessage(userInput, chatMessages, false)
     }
 
     // Consolidate conditions to avoid TypeScript error
     if (
-      isPromptPickerOpen ||
+      isCommandPickerOpen ||
       isFilePickerOpen ||
       isToolPickerOpen ||
       isAssistantPickerOpen
@@ -102,7 +101,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
       ) {
         event.preventDefault()
         // Toggle focus based on picker type
-        if (isPromptPickerOpen) setFocusPrompt(!focusPrompt)
+        if (isCommandPickerOpen) setFocusCommand(!focusCommand)
         if (isFilePickerOpen) setFocusFile(!focusFile)
         if (isToolPickerOpen) setFocusTool(!focusTool)
         if (isAssistantPickerOpen) setFocusAssistant(!focusAssistant)
@@ -165,8 +164,6 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
   return (
     <>
       <div className="flex flex-col flex-wrap justify-center gap-2">
-        <ChatFilesDisplay />
-
         {selectedTools &&
           selectedTools.map((tool, index) => (
             <div
@@ -216,32 +213,12 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
           <ChatCommandInput />
         </div>
 
-        <>
-          <IconCirclePlus
-            className="absolute bottom-[12px] left-3 cursor-pointer p-1 hover:opacity-50"
-            size={32}
-            onClick={() => fileInputRef.current?.click()}
-          />
-
-          {/* Hidden input to select files from device */}
-          <Input
-            ref={fileInputRef}
-            className="hidden"
-            type="file"
-            onChange={e => {
-              if (!e.target.files) return
-              handleSelectDeviceFile(e.target.files[0])
-            }}
-            accept={filesToAccept}
-          />
-        </>
-
         <TextareaAutosize
           textareaRef={chatInputRef}
-          className="ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring text-md flex w-full resize-none rounded-md border-none bg-transparent px-14 py-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          className="ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring text-md flex w-full resize-none rounded-md border-none bg-transparent px-3 py-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder={t(
             // `Ask anything. Type "@" for assistants, "/" for prompts, "#" for files, and "!" for tools.`
-            `Ask anything. Type @  /  #  !`
+            `Ask anything. Type / !`
           )}
           onValueChange={handleInputChange}
           value={userInput}

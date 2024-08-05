@@ -97,22 +97,18 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
   onChangeChatSettings,
   showTooltip
 }) => {
-  const { profile, selectedWorkspace, availableOpenRouterModels, models } =
-    useContext(ChatbotUIContext)
+  const { profile, selectedWorkspace, models } = useContext(ChatbotUIContext)
 
   const isCustomModel = models.some(
     model => model.model_id === chatSettings.model
   )
 
-  function findOpenRouterModel(modelId: string) {
-    return availableOpenRouterModels.find(model => model.modelId === modelId)
-  }
-
   const MODEL_LIMITS = CHAT_SETTING_LIMITS[chatSettings.model] || {
     MIN_TEMPERATURE: 0,
     MAX_TEMPERATURE: 1,
     MAX_CONTEXT_LENGTH:
-      findOpenRouterModel(chatSettings.model)?.maxContext || 4096
+      models.find(model => model.model_id === chatSettings.model)
+        ?.context_length || 4096
   }
 
   return (
@@ -219,34 +215,6 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
             }
           />
         )}
-      </div>
-
-      <div className="mt-5">
-        <Label>Embeddings Provider</Label>
-
-        <Select
-          value={chatSettings.embeddingsProvider}
-          onValueChange={(embeddingsProvider: "openai" | "local") => {
-            onChangeChatSettings({
-              ...chatSettings,
-              embeddingsProvider
-            })
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue defaultValue="openai" />
-          </SelectTrigger>
-
-          <SelectContent>
-            <SelectItem value="openai">
-              {profile?.use_azure_openai ? "Azure OpenAI" : "OpenAI"}
-            </SelectItem>
-
-            {window.location.hostname === "localhost" && (
-              <SelectItem value="local">Local</SelectItem>
-            )}
-          </SelectContent>
-        </Select>
       </div>
     </div>
   )

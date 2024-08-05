@@ -5,10 +5,7 @@ import { createChat } from "@/db/chats"
 import { createMessageFileItems } from "@/db/message-file-items"
 import { createMessages, updateMessage } from "@/db/messages"
 import { uploadMessageImage } from "@/db/storage/message-images"
-import {
-  buildFinalMessages,
-  adaptMessagesForGoogleGemini
-} from "@/lib/build-prompt"
+import { buildFinalMessages } from "@/lib/build-prompt"
 import { consumeReadableStream } from "@/lib/consume-stream"
 import { Tables, TablesInsert } from "@/supabase/types"
 import {
@@ -49,34 +46,6 @@ export const validateChatSettings = (
   if (!messageContent) {
     throw new Error("Message content not found")
   }
-}
-
-export const handleRetrieval = async (
-  userInput: string,
-  newMessageFiles: ChatFile[],
-  chatFiles: ChatFile[],
-  embeddingsProvider: "openai" | "local",
-  sourceCount: number
-) => {
-  const response = await fetch("/api/retrieval/retrieve", {
-    method: "POST",
-    body: JSON.stringify({
-      userInput,
-      fileIds: [...newMessageFiles, ...chatFiles].map(file => file.id),
-      embeddingsProvider,
-      sourceCount
-    })
-  })
-
-  if (!response.ok) {
-    console.error("Error retrieving:", response)
-  }
-
-  const { results } = (await response.json()) as {
-    results: Tables<"file_items">[]
-  }
-
-  return results
 }
 
 export const createTempMessages = (
@@ -201,27 +170,20 @@ export const handleHostedChat = async (
   setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
   setToolInUse: React.Dispatch<React.SetStateAction<string>>
 ) => {
-  const provider =
-    modelData.provider === "openai" && profile.use_azure_openai
-      ? "azure"
-      : modelData.provider
+  const provider = "aws"
 
   let draftMessages = await buildFinalMessages(payload, profile, chatImages)
 
-  let formattedMessages : any[] = []
-  if (provider === "google") {
-    formattedMessages = await adaptMessagesForGoogleGemini(payload, draftMessages)
-  } else {
-    formattedMessages = draftMessages
-  }
+  let formattedMessages: any[] = []
+  formattedMessages = draftMessages
 
   const apiEndpoint =
-    provider === "custom" ? "/api/chat/custom" : `/api/chat/${provider}`
+    provider === "aws" ? "/api/chat/aws" : `/api/chat/${provider}`
 
   const requestBody = {
     chatSettings: payload.chatSettings,
     messages: formattedMessages,
-    customModelId: provider === "custom" ? modelData.hostedId : ""
+    customModelId: provider === "aws" ? modelData.hostedId : ""
   }
 
   const response = await fetchChatResponse(
@@ -365,7 +327,7 @@ export const handleCreateChat = async (
     name: messageContent.substring(0, 100),
     prompt: chatSettings.prompt,
     temperature: chatSettings.temperature,
-    embeddings_provider: chatSettings.embeddingsProvider
+    embeddings_provider: "openai"
   })
 
   setSelectedChat(createdChat)
