@@ -1,18 +1,10 @@
 import useHotkey from "@/lib/hooks/use-hotkey"
-import {
-  IconBrandGithub,
-  IconBrandX,
-  IconHelpCircle,
-  IconQuestionMark
-} from "@tabler/icons-react"
-import Link from "next/link"
+import { IconQuestionMark } from "@tabler/icons-react"
 import { FC, useState } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "../ui/dropdown-menu"
 import { Announcements } from "../utility/announcements"

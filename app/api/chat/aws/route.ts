@@ -1,15 +1,14 @@
-import { getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { RootAgent } from "@/lib/agents/root-agent"
 import { WebCrawlerToolItem } from "@/lib/agents/WebCralwer"
 import { NextRequest, NextResponse } from "next/server"
 import { AgentConfig } from "@/lib/agents/agent-api"
-import { parseResponse } from "@/lib/agents/parser"
 import {
   PatientDataToolItem,
   PatientDynamicEvaluationToolItem,
   PatientResourceTypesToolItem
 } from "@/lib/agents/patientData"
+import { UmlsSearchToolItem } from "@/lib/agents/ULMS"
 
 export const runtime = "edge"
 
@@ -40,7 +39,8 @@ export async function POST(request: NextRequest) {
       WebCrawlerToolItem,
       PatientDataToolItem,
       PatientDynamicEvaluationToolItem,
-      PatientResourceTypesToolItem
+      PatientResourceTypesToolItem,
+      UmlsSearchToolItem
     ])
 
     // Use the last message as the input for the chat

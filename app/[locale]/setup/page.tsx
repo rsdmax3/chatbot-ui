@@ -43,6 +43,7 @@ export default function SetupPage() {
   const [username, setUsername] = useState(profile?.username || "")
   const [usernameAvailable, setUsernameAvailable] = useState(true)
 
+  // API Step
   const [awsAccessKey, setAwsAccessKey] = useState("")
   const [awsSecretKey, setAwsSecretKey] = useState("")
   const [awsSessionToken, setAwsSessionToken] = useState("")
@@ -128,19 +129,12 @@ export default function SetupPage() {
           <StepContainer
             stepDescription="Let's create your profile."
             stepNum={currentStep}
-            stepTitle="Welcome to Medea"
+            stepTitle="Welcome to Chatbot UI"
             onShouldProceed={handleShouldProceed}
             showNextButton={!!(username && usernameAvailable)}
             showBackButton={false}
           >
-            <ProfileStep
-              username={username}
-              usernameAvailable={usernameAvailable}
-              displayName={displayName}
-              onUsernameAvailableChange={setUsernameAvailable}
-              onUsernameChange={setUsername}
-              onDisplayNameChange={setDisplayName}
-            />
+            <ProfileStep username={username} />
           </StepContainer>
         )
 
@@ -148,19 +142,19 @@ export default function SetupPage() {
       case 2:
         return (
           <StepContainer
-            stepDescription="Enter API keys for each service you'd like to use."
+            stepDescription=""
             stepNum={currentStep}
-            stepTitle="Set API Keys (optional)"
+            stepTitle="Set AWS Credentials"
             onShouldProceed={handleShouldProceed}
             showNextButton={true}
             showBackButton={true}
           >
             <APIStep
               awsAccessKey={awsAccessKey}
-              onAwsAccessKeyChange={setAwsAccessKey}
               awsSecretKey={awsSecretKey}
-              onAwsSecretKeyChange={setAwsSecretKey}
               awsSessionToken={awsSessionToken}
+              onAwsAccessKeyChange={setAwsAccessKey}
+              onAwsSecretKeyChange={setAwsSecretKey}
               onAwsSessionTokenChange={setAwsSessionToken}
             />
           </StepContainer>
