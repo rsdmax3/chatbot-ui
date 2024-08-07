@@ -15,49 +15,46 @@ export const getAssistantById = async (assistantId: string) => {
   return assistant
 }
 
-export const getAssistantWorkspacesByWorkspaceId = async (
-  workspaceId: string
-) => {
+export const getWorkspaceById = async (workspaceId: string) => {
   const { data: workspace, error } = await supabase
     .from("workspaces")
     .select(
       `
       id,
-      name,
-      assistants (*)
+      name
     `
     )
     .eq("id", workspaceId)
     .single()
 
   if (!workspace) {
-    throw new Error(error.message)
+    throw new Error(error?.message || "Workspace not found")
   }
 
   return workspace
 }
 
-export const getAssistantWorkspacesByAssistantId = async (
-  assistantId: string
-) => {
-  const { data: assistant, error } = await supabase
-    .from("assistants")
-    .select(
-      `
-      id, 
-      name, 
-      workspaces (*)
-    `
-    )
-    .eq("id", assistantId)
-    .single()
+// export const getAssistantWorkspacesByAssistantId = async (
+//   assistantId: string
+// ) => {
+//   const { data: assistant, error } = await supabase
+//     .from("assistants")
+//     .select(
+//       `
+//       id,
+//       name,
+//       workspaces (*)
+//     `
+//     )
+//     .eq("id", assistantId)
+//     .single()
 
-  if (!assistant) {
-    throw new Error(error.message)
-  }
+//   if (!assistant) {
+//     throw new Error(error.message)
+//   }
 
-  return assistant
-}
+//   return assistant
+// }
 
 export const createAssistant = async (
   assistant: TablesInsert<"assistants">,

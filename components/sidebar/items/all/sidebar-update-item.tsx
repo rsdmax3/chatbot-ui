@@ -28,7 +28,6 @@ import {
 import {
   createAssistantWorkspaces,
   deleteAssistantWorkspace,
-  getAssistantWorkspacesByAssistantId,
   updateAssistant
 } from "@/db/assistants"
 import { updateChat } from "@/db/chats"
@@ -151,23 +150,23 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     Tables<"tools">[]
   >([])
 
-  useEffect(() => {
-    if (isOpen) {
-      const fetchData = async () => {
-        if (workspaces.length > 1) {
-          const workspaces = await fetchSelectedWorkspaces()
-          setStartingWorkspaces(workspaces)
-          setSelectedWorkspaces(workspaces)
-        }
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     const fetchData = async () => {
+  //       if (workspaces.length > 1) {
+  //         const workspaces = await fetchSelectedWorkspaces()
+  //         setStartingWorkspaces(workspaces)
+  //         setSelectedWorkspaces(workspaces)
+  //       }
 
-        const fetchDataFunction = fetchDataFunctions[contentType]
-        if (!fetchDataFunction) return
-        await fetchDataFunction(item.id)
-      }
+  //       const fetchDataFunction = fetchDataFunctions[contentType]
+  //       if (!fetchDataFunction) return
+  //       await fetchDataFunction(item.id)
+  //     }
 
-      fetchData()
-    }
-  }, [isOpen])
+  //     fetchData()
+  //   }
+  // }, [isOpen])
 
   const renderState = {
     chats: null,
@@ -246,10 +245,10 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
       const item = await getCollectionWorkspacesByCollectionId(collectionId)
       return item.workspaces
     },
-    assistants: async (assistantId: string) => {
-      const item = await getAssistantWorkspacesByAssistantId(assistantId)
-      return item.workspaces
-    },
+    // assistants: async (assistantId: string) => {
+    //   const item = await getAssistantWorkspacesByAssistantId(assistantId)
+    //   return item.workspaces
+    // },
     tools: async (toolId: string) => {
       const item = await getToolWorkspacesByToolId(toolId)
       return item.workspaces
@@ -260,15 +259,15 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     }
   }
 
-  const fetchSelectedWorkspaces = async () => {
-    const fetchFunction = fetchWorkpaceFunctions[contentType]
+  // const fetchSelectedWorkspaces = async () => {
+  //   const fetchFunction = fetchWorkpaceFunctions[contentType]
 
-    if (!fetchFunction) return []
+  //   if (!fetchFunction) return []
 
-    const workspaces = await fetchFunction(item.id)
+  //   const workspaces = await fetchFunction(item.id)
 
-    return workspaces
-  }
+  //   return workspaces
+  // }
 
   const handleWorkspaceUpdates = async (
     startingWorkspaces: Tables<"workspaces">[],
@@ -436,13 +435,13 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
         )
       )
 
-      for (const file of filesToAdd) {
-        await createAssistantFile({
-          user_id: item.user_id,
-          assistant_id: assistantId,
-          file_id: file.id
-        })
-      }
+      // for (const file of filesToAdd) {
+      //   await createAssistantFile({
+      //     user_id: item.user_id,
+      //     assistant_id: assistantId,
+      //     file_id: file.id
+      //   })
+      // }
 
       for (const file of filesToRemove) {
         await deleteAssistantFile(assistantId, file.id)
@@ -464,13 +463,13 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
           )
       )
 
-      for (const collection of collectionsToAdd) {
-        await createAssistantCollection({
-          user_id: item.user_id,
-          assistant_id: assistantId,
-          collection_id: collection.id
-        })
-      }
+      // for (const collection of collectionsToAdd) {
+      //   await createAssistantCollection({
+      //     user_id: item.user_id,
+      //     assistant_id: assistantId,
+      //     collection_id: collection.id
+      //   })
+      // }
 
       for (const collection of collectionsToRemove) {
         await deleteAssistantCollection(assistantId, collection.id)
@@ -489,13 +488,13 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
         )
       )
 
-      for (const tool of toolsToAdd) {
-        await createAssistantTool({
-          user_id: item.user_id,
-          assistant_id: assistantId,
-          tool_id: tool.id
-        })
-      }
+      // for (const tool of toolsToAdd) {
+      //   await createAssistantTool({
+      //     user_id: item.user_id,
+      //     assistant_id: assistantId,
+      //     tool_id: tool.id
+      //   })
+      // }
 
       for (const tool of toolsToRemove) {
         await deleteAssistantTool(assistantId, tool.id)

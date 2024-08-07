@@ -18,3 +18,17 @@ export interface LLM {
     outputCost?: number
   }
 }
+export const defaultModel: LLM = {
+  modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+  modelName: "Claude 3.5 Sonnet",
+  provider: "aws",
+  hostedId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+  platformLink: "https://www.anthropic.com",
+  imageInput: true,
+  pricing: {
+    currency: "USD",
+    unit: "1000 tokens",
+    inputCost: 0.015,
+    outputCost: 0.075
+  }
+}

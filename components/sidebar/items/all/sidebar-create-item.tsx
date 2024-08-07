@@ -157,9 +157,9 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
         tool_id: tool.id
       }))
 
-      await createAssistantFiles(assistantFiles)
-      await createAssistantCollections(assistantCollections)
-      await createAssistantTools(assistantTools)
+      // await createAssistantFiles(assistantFiles)
+      // await createAssistantCollections(assistantCollections)
+      // await createAssistantTools(assistantTools)
 
       return updatedAssistant
     },

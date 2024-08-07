@@ -2,7 +2,7 @@
 
 import { Dashboard } from "@/components/ui/dashboard"
 import { ChatbotUIContext } from "@/context/context"
-import { getAssistantWorkspacesByWorkspaceId } from "@/db/assistants"
+// import { getAssistantWorkspacesByWorkspaceId } from "@/db/assistants"
 import { getChatsByWorkspaceId } from "@/db/chats"
 import { getCollectionWorkspacesByWorkspaceId } from "@/db/collections"
 import { getFileWorkspacesByWorkspaceId } from "@/db/files"
@@ -94,42 +94,42 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     const workspace = await getWorkspaceById(workspaceId)
     setSelectedWorkspace(workspace)
 
-    const assistantData = await getAssistantWorkspacesByWorkspaceId(workspaceId)
-    setAssistants(assistantData.assistants)
+    // const assistantData = await getAssistantWorkspacesByWorkspaceId(workspaceId)
+    // setAssistants(assistantData.assistants)
 
-    for (const assistant of assistantData.assistants) {
-      let url = ""
+    // for (const assistant of assistantData.assistants) {
+    //   let url = ""
 
-      if (assistant.image_path) {
-        url = (await getAssistantImageFromStorage(assistant.image_path)) || ""
-      }
+    //   if (assistant.image_path) {
+    //     url = (await getAssistantImageFromStorage(assistant.image_path)) || ""
+    //   }
 
-      if (url) {
-        const response = await fetch(url)
-        const blob = await response.blob()
-        const base64 = await convertBlobToBase64(blob)
+    //   if (url) {
+    //     const response = await fetch(url)
+    //     const blob = await response.blob()
+    //     const base64 = await convertBlobToBase64(blob)
 
-        setAssistantImages(prev => [
-          ...prev,
-          {
-            assistantId: assistant.id,
-            path: assistant.image_path,
-            base64,
-            url
-          }
-        ])
-      } else {
-        setAssistantImages(prev => [
-          ...prev,
-          {
-            assistantId: assistant.id,
-            path: assistant.image_path,
-            base64: "",
-            url
-          }
-        ])
-      }
-    }
+    //     setAssistantImages(prev => [
+    //       ...prev,
+    //       {
+    //         assistantId: assistant.id,
+    //         path: assistant.image_path,
+    //         base64,
+    //         url
+    //       }
+    //     ])
+    //   } else {
+    //     setAssistantImages(prev => [
+    //       ...prev,
+    //       {
+    //         assistantId: assistant.id,
+    //         path: assistant.image_path,
+    //         base64: "",
+    //         url
+    //       }
+    //     ])
+    //   }
+    // }
 
     const chats = await getChatsByWorkspaceId(workspaceId)
     setChats(chats)
